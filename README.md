@@ -21,14 +21,14 @@ The "Watch the 2-minute demo" button, the Demo menu item and the Demo section ar
 
 1. Add the film as `assets/agrilink-demo.mp4` (MP4, H.264 video, AAC audio, 1280×720 or 1920×1080, under 25 MB).
 2. In `pitch.js`, change `const DEMO_VIDEO_AVAILABLE = false;` to `true`.
-3. Raise the version by one so returning visitors get the change: in `sw.js`, `agrilink-site-v18` and `?v=18` become `v19`; in `index.html`, the six `?v=18` on the style and script links become `?v=19`.
+3. Raise the version by one so returning visitors get the change: in `sw.js`, `agrilink-site-v19` and `?v=19` become `v20`; in `index.html`, the six `?v=19` on the style and script links become `?v=20`.
 4. Commit and push.
 
 While the switch is `false`, the page never asks for the file, so there is no error in the console.
 
 ## Screenshots
 
-`assets/app/screen-*.webp` are real screens from the live app (light mode, 390×844 at 2×, saved 720 px wide): the demo farmer's harvests, deals, cold room booking and plant check, and a buyer following a delivery.
+`assets/app/screen-*.webp` are real screens from the live app, each in light and dark (the app's own Appearance setting), 390×844 at 2×, saved 720 px wide: the Sell flow's review step, the farmer's deals, a filled cold room form, a plant check, and a buyer following a delivery. The page shows the dark ones when the site is dark.
 
 ## How the AGRILINK word works
 

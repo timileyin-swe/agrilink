@@ -6,7 +6,7 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 
 :root {
-  --bg: #F6F4EC; --card: #FFFFFF; --text: #17241A; --muted: #66756B; --line: #E0E0D6;
+  --bg: #F6F4EC; --card: #FFFFFF; --text: #17241A; --muted: #5C6B61; --line: #E0E0D6;
   --green: #155C32; --green-ink: #155C32; --green-soft: #E3F2E6; --amber: #F5A800; --amber-soft: #FFF5D9; --on-amber: #17241A;
   --header: rgb(246 244 236 / 82%); --shadow: 0 1px 2px rgb(23 36 26 / 5%), 0 12px 32px rgb(23 36 26 / 6%);
   --pad: clamp(16px, 5vw, 88px); --max: 1200px; --r-card: 16px; --r-btn: 14px; --tap: 48px;

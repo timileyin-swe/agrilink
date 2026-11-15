@@ -1,8 +1,8 @@
 // Network first, the cached copy when offline. A new cache name for each release: the old one is deleted on
-// activate, so returning visitors get the new site (v18: new screenshots, the story reveal and parallax).
-const cacheName = 'agrilink-site-v18';
+// activate, so returning visitors get the new site (v19: light and dark app screenshots, new Step 1 and Step 4).
+const cacheName = 'agrilink-site-v19';
 // The ?v= on styles and scripts matches index.html, so a new page never runs an old script from a browser cache.
-const v = '?v=18';
+const v = '?v=19';
 const core = ['./', './index.html', './base.css' + v, './hero.css' + v, './pitch.css' + v, './hero.js' + v, './pitch.js' + v, './app.js' + v,
   './assets/word.svg', './assets/harvest.jpg', './assets/favicon.svg', './assets/fonts/inter-latin.woff2', './assets/fonts/inter-latin-ext.woff2',
   './assets/happy-farmers-720.webp']; // screenshots and photos are kept as they are viewed (below);
