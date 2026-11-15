@@ -1,138 +1,192 @@
-const landing = document.querySelector('.landing');
-landing.querySelector('.launch').remove();
-landing.insertAdjacentHTML('beforeend','<a class="scroll" href="#intro">Scroll down ↓</a>');
+// The page's behaviour: his AGRILINK scroll transition (unchanged maths), the story lines that appear as you
+// scroll, gentle parallax, the header, the theme toggle, the "How it works" steps, reveals, Back to top,
+// and the demo film.
+
+// The demo film: set this to true after adding assets/agrilink-demo.mp4 (MP4, H.264, under 25 MB).
+// While it is false, the page never asks for the file, and the demo button, menu item and section stay hidden.
+const DEMO_VIDEO_AVAILABLE = false;
+const DEMO_FILM = './assets/agrilink-demo.mp4';
+
+const root = document.documentElement;
 const home = document.querySelector('#hero');
-home.insertAdjacentHTML('beforeend', `
-<section id="intro" class="intro"><div class="intro-copy"><h2>From harvest to market</h2><div class="story"><p>The tomatoes are ready. The buyer is still a phone call away. What happens to the baskets that stay on the farm?</p><p>AgriLink brings harvest records, buyers and storage into one place. Start with what you picked today, even when the signal drops.</p><a class="intro-action" href="#record">Record your harvest <span aria-hidden="true">↗</span></a></div></div><figure class="intro-farmers"><img src="./assets/farmer-portrait.jpg" width="736" height="414" alt="A smiling farmer standing among rows of tomato plants"></figure></section>
-<section class="services" aria-label="How AgriLink works">
-<article><img loading="lazy" src="./assets/tomatoes.jpg" alt="Fresh ripe tomatoes"><div><small>For farmers</small><h2>Sell while<br>it’s fresh.</h2><p>Record the crop, quantity and harvest date. See which baskets need attention first.</p><a href="#record">Record a harvest ↗</a></div></article>
-<article><img loading="lazy" src="./assets/market.jpg" alt="Produce displayed for sale"><div><small>For traders</small><h2>Find your<br>next supply.</h2><p>Browse a harvest, reserve the quantity you need and choose pickup or delivery.</p><a href="#market">Explore the market ↗</a></div></article>
-<article><img loading="lazy" src="./assets/field.jpg" alt="Cultivated fields in the countryside"><div><small>After harvest</small><h2>Keep more<br>of the crop.</h2><p>Explore storage options for produce that needs more time before collection.</p><a href="#storage">Find storage ↗</a></div></article></section>
-<section id="film" class="film"><button id="play" aria-label="Play harvest film"><span>▶</span></button></section>
-<dialog id="cinema"><button id="closeFilm" autofocus>Close ×</button><video controls playsinline preload="none" src="./assets/pitch-film.mp4"></video></dialog>
-<section class="harvest-voices" aria-labelledby="voices-heading">
-<h2 id="voices-heading">After the harvest</h2>
-<div class="voices-grid">
-<figure><div class="voice-photo"><img loading="lazy" src="./assets/adesina-london.jpg" alt="Akinwumi Adesina"><a href="https://commons.wikimedia.org/wiki/File:His_Excellency_President_Dr_Akinwumi_Adesina,_Africa_Development_Bank,_speaking_at_the_UK-Africa_Investment_Summit,_London,_20_January_2020_picture_DFID_Graham_Carlow_20200120122921_GMCB7244_(49415031692).jpg">Photo: Graham Carlow / DFID · CC BY 2.0</a></div><div class="voice-quote"><blockquote>“Agriculture is a business. And we must take a full value chain approach, from the farm to the table.”</blockquote><figcaption><strong>Akinwumi Adesina</strong><span>Former Nigerian Minister of Agriculture</span><a href="https://www.afdb.org/en/news-and-events/opening-speech-delivered-by-african-development-bank-president-akinwumi-adesina-at-the-high-level-conference-on-feeding-africa-an-action-plan-for-african-agricultural-transformation-14843">Feeding Africa speech, 2015 ↗</a></figcaption></div></figure>
-<figure><div class="voice-photo"><img loading="lazy" src="./assets/alvaro-lario.jpg" alt="Alvaro Lario"><a href="https://commons.wikimedia.org/wiki/File:Alvaro_Lario_at_the_WEF.jpg">Photo: Conorlocky · CC BY-SA 4.0</a></div><div class="voice-quote"><blockquote>“Productive and profitable small farms also work with small and medium-sized businesses that process, store and market food.”</blockquote><figcaption><strong>Alvaro Lario</strong><span>IFAD President</span><a href="https://webapps.ifad.org/members/gc/46/docs/GC-46-INF-4.pdf">IFAD opening statement, 2023 (PDF) ↗</a></figcaption></div></figure>
-</div></section>
-<section id="agriculture-news" class="ag-news"><h2>Latest</h2><div class="news-grid"></div></section>
-<section class="tools"><h2>Explore AgriLink</h2><div><a href="#record"><img loading="lazy" src="./assets/tomatoes.jpg" alt="">Record a harvest ↗</a><a href="#market"><img loading="lazy" src="./assets/market.jpg" alt="">Reserve produce ↗</a><a href="#orders"><img loading="lazy" src="./assets/harvest.jpg" alt="">Follow an order ↗</a></div></section>`);
-const menu = document.querySelector('#menu'), burger = document.querySelector('.burger');
-const previewImages = {home:'harvest', film:'harvest', intro:'field', record:'tomatoes', market:'market', storage:'field', harvests:'tomatoes', orders:'market'};
-function previewLink(link) {
-  if (!link) return;
-  menu.querySelector('img').src = './assets/' + previewImages[link.hash.slice(1)] + '.jpg';
-  menu.querySelector('figcaption').textContent = link.textContent;
+const landing = home.querySelector('.landing');
+const runway = home.querySelector('.hero-runway');
+const storyLines = [...document.querySelectorAll('#intro .story .line')];
+const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+// Touch screens get the still version too (see hero.css): scroll-linked motion jumps there.
+const touchScreen = matchMedia('(hover: none), (pointer: coarse)');
+const moving = () => !motionPreference.matches && !touchScreen.matches;
+const clamp01 = (x) => Math.min(1, Math.max(0, x));
+
+// Classes that switch the motion on. Without this script (or with reduced motion) nothing waits to appear.
+function setMotionClasses() {
+  home.classList.toggle('hero-live', moving());
+  root.classList.toggle('story-live', moving());
+  root.classList.toggle('parallax-on', moving());
 }
+setMotionClasses();
+
+/* ---------- his scroll-triggered enlarging transition (same maths as before) ---------- */
+// Read phase only; returns the writes. One shared frame does every read first, then every write.
+let introFraction = 0;
+function readHero() {
+  const rect = runway.getBoundingClientRect();
+  const stageHeight = landing.offsetHeight;
+  const distance = Math.max(1, rect.height - stageHeight);
+  const introTravel = Math.min(distance, stageHeight);
+  const remaining = Math.max(0, rect.bottom - stageHeight);
+  const fraction = Math.max(0, 1 - remaining / introTravel);
+  introFraction = fraction;
+  const fade = fraction * fraction * (3 - 2 * fraction);
+  const progress = Math.min(1, Math.max(0, -rect.top / (distance * 0.43)));
+  return () => {
+    home.style.setProperty('--intro-fade', String(fade));
+    home.classList.toggle('intro-visible', fade > 0.5);
+    home.style.setProperty('--intro-offset', -Math.min(remaining, introTravel) + 'px');
+    landing.style.setProperty('--zoom', String(Math.exp(progress * 3.4)));
+    landing.style.setProperty('--veil', String(Math.min(1, (1 - progress) * 5)));
+  };
+}
+
+/* ---------- Our story: each line fades and rises in as you scroll ---------- */
+// While the story panel settles over the film, the lines follow that same scroll, one after another.
+// After that, a line that is still low on the screen finishes by the time it reaches about two thirds
+// of the way up, so nothing stays hidden while the section is on screen.
+function readStory() {
+  if (!storyLines.length) return null;
+  const vh = innerHeight;
+  const introTop = storyLines[0].offsetParent ? storyLines[0].offsetParent.getBoundingClientRect().top : 0;
+  const values = storyLines.map((line, i) => {
+    const staggered = clamp01((introFraction - (0.15 + i * 0.13)) / 0.3);
+    const top = introTop + line.offsetTop; // offsetTop ignores the line's own movement, so no feedback
+    const placed = clamp01((vh * 0.95 - top) / (vh * 0.27));
+    return Math.min(staggered, placed).toFixed(3);
+  });
+  return () => storyLines.forEach((line, i) => line.style.setProperty('--p', values[i]));
+}
+
+/* ---------- parallax: things move at slightly different speeds (transform only, off with reduced motion) ---------- */
+// data-speed > 0 moves slower than the page (further away), < 0 a little faster (closer). data-max caps the
+// movement in pixels; phones get half. Uses the CSS `translate` property, so it never fights the reveals
+// or hover effects, which use `transform`.
+const layers = [];
+const active = new Set();
+function setUpParallax() {
+  if (!('IntersectionObserver' in window) || !moving()) return; // none on touch screens or with reduced motion
+  document.querySelectorAll('[data-speed]').forEach((el) => {
+    if (el.closest('.feature-stage')) return;
+    layers.push({ el, speed: Number(el.dataset.speed) || 0, max: Number(el.dataset.max) || 24, y: 0 });
+  });
+  const watch = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      const layer = layers.find((l) => l.el === entry.target);
+      if (entry.isIntersecting) { active.add(layer); layer.el.style.willChange = 'translate'; }
+      else { active.delete(layer); layer.el.style.willChange = ''; }
+    }
+    schedule();
+  }, { rootMargin: '20% 0px' });
+  layers.forEach((l) => watch.observe(l.el));
+}
+function readParallax() {
+  if (!active.size) return null;
+  const vh = innerHeight;
+  const phone = innerWidth < 700 ? 0.5 : 1;
+  const next = [];
+  for (const layer of active) {
+    const r = layer.el.getBoundingClientRect();
+    const centre = r.top + r.height / 2 - layer.y; // where it would be without our shift
+    const cap = layer.max * phone;
+    const y = Math.max(-cap, Math.min(cap, -(centre - vh / 2) * layer.speed * phone));
+    next.push([layer, Math.round(y * 10) / 10]);
+  }
+  return () => next.forEach(([layer, y]) => { layer.y = y; layer.el.style.translate = `0 ${y}px`; });
+}
+function clearMotion() {
+  layers.forEach((l) => { l.y = 0; l.el.style.translate = ''; l.el.style.willChange = ''; });
+  storyLines.forEach((line) => line.style.removeProperty('--p'));
+}
+
+/* ---------- one shared animation frame for all of the above ---------- */
+let queued = false;
+function frame() {
+  queued = false;
+  if (!moving()) return;
+  const writes = [readHero(), readStory(), readParallax()]; // every read first ...
+  writes.forEach((write) => write && write()); // ... then every write, so the layout is worked out once
+}
+function schedule() {
+  if (!queued) { queued = true; requestAnimationFrame(frame); }
+}
+addEventListener('scroll', schedule, { passive: true });
+addEventListener('resize', schedule);
+addEventListener('hashchange', schedule);
+motionPreference.addEventListener?.('change', () => { setMotionClasses(); if (!moving()) clearMotion(); schedule(); });
+schedule();
+
+/* ---------- header: blur once scrolled; phone menu ---------- */
+const mast = document.querySelector('.mast');
+const burger = mast.querySelector('.burger');
+const onScroll = () => mast.classList.toggle('scrolled', scrollY > 8);
+addEventListener('scroll', onScroll, { passive: true });
+onScroll();
 function toggleMenu(open) {
-  menu.hidden = !open;
+  mast.classList.toggle('open', open);
   burger.setAttribute('aria-expanded', String(open));
   burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-  if (open) previewLink(menu.querySelector('[aria-current], a'));
+  if (open) mast.querySelector('#menu a')?.focus();
 }
-burger.onclick = () => toggleMenu(menu.hidden);
-menu.onpointerover = menu.onfocusin = event => previewLink(event.target.closest('a'));
-menu.onclick = event => {
-  if (event.target.closest('a')) { toggleMenu(false); burger.focus(); }
-};
-document.addEventListener('pointerdown', event => {
-  if (!menu.hidden && !event.target.closest('.mast')) toggleMenu(false);
-});
-document.querySelector('.mast').addEventListener('focusout', event => {
-  if (!menu.hidden && !event.currentTarget.contains(event.relatedTarget)) toggleMenu(false);
-});
-document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && !menu.hidden) { toggleMenu(false); burger.focus(); }
-});
-const cinema=document.querySelector('#cinema');
-document.querySelector('#play').onclick=()=>{cinema.showModal();cinema.querySelector('video').play().catch(()=>{})};
-document.querySelector('#closeFilm').onclick=()=>cinema.close();
-cinema.onclose=()=>cinema.querySelector('video').pause();
+burger.onclick = () => toggleMenu(!mast.classList.contains('open'));
+mast.querySelector('#menu').addEventListener('click', (e) => { if (e.target.closest('a') && mast.classList.contains('open')) toggleMenu(false); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && mast.classList.contains('open')) { toggleMenu(false); burger.focus(); } });
+document.addEventListener('pointerdown', (e) => { if (mast.classList.contains('open') && !e.target.closest('.mast')) toggleMenu(false); });
 
-const runway = document.createElement('div');
-runway.className='hero-runway';
-landing.before(runway);
-runway.append(landing);
-const motionPreference=matchMedia('(prefers-reduced-motion: reduce)');
-let pendingFrame=false;
-function paintHero(){
-  pendingFrame=false;
-  if(home.hidden||motionPreference.matches)return;
-  const rect=runway.getBoundingClientRect();
-  const distance=Math.max(1,rect.height-landing.offsetHeight);
-  const introTravel = Math.min(distance, landing.offsetHeight);
-  const remaining = Math.max(0, rect.bottom - landing.offsetHeight);
-  const fraction = Math.max(0, 1 - remaining / introTravel);
-  const fade = fraction * fraction * (3 - 2 * fraction);
-  home.style.setProperty('--intro-fade', String(fade));
-  home.classList.toggle('intro-visible', fade > 0.5);
-
-  home.style.setProperty('--intro-offset', -Math.min(remaining, introTravel) + 'px');
-  const progress=Math.min(1,Math.max(0,-rect.top/(distance*.43)));
-  landing.style.setProperty('--zoom',String(Math.exp(progress*3.4)));
-  landing.style.setProperty('--veil',String(Math.min(1,(1-progress)*5)));
-}
-function scheduleHero(){
-  if(!pendingFrame){pendingFrame=true;requestAnimationFrame(paintHero)}
-}
-window.addEventListener('scroll',scheduleHero,{passive:true});
-window.addEventListener('resize',scheduleHero);
-window.addEventListener('hashchange',scheduleHero);
-paintHero();
-const themeButton = document.querySelector('#theme');
-function applyTheme(dark) {
-  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-  themeButton.setAttribute('aria-pressed', String(dark));
-  themeButton.textContent = dark ? '☀' : '☾';
-  themeButton.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
-  document.querySelector('meta[name="theme-color"]').content = dark ? '#000000' : '#ffffff';
-}
-applyTheme(document.documentElement.dataset.theme === 'dark');
-let themeFadeTimer;
-themeButton.onclick = () => {
-  const root = document.documentElement;
-  root.classList.add('theme-switching');
-  clearTimeout(themeFadeTimer);
-  themeFadeTimer = setTimeout(() => root.classList.remove('theme-switching'), 260);
-  applyTheme(document.documentElement.dataset.theme !== 'dark');
-  try { localStorage.setItem('agrilink-theme', document.documentElement.dataset.theme); } catch {}
-};
-
-
-
-
-
-
-
-
-
-/* Reveal each section once, keeping content readable before JavaScript runs. */
-const sectionMotion = matchMedia('(prefers-reduced-motion: reduce)');
-if ('IntersectionObserver' in window) {
-  const sectionEntrance = new IntersectionObserver(entries => {
-    for (const entry of entries) {
-      if (!entry.isIntersecting) continue;
-      if (!sectionMotion.matches) entry.target.classList.add('section-entering');
-      sectionEntrance.unobserve(entry.target);
-    }
-  }, { threshold: 0.08 });
-  document.querySelectorAll('.film, .journey, .details, .tools').forEach(section => {
-    sectionEntrance.observe(section);
-    section.addEventListener('animationend', () => section.classList.remove('section-entering'));
+/* ---------- Back to top (and the logo): the header is sticky, so "#top" alone never moves the page ---------- */
+document.querySelectorAll('a[href="#top"]').forEach((link) => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (mast.classList.contains('open')) toggleMenu(false);
+    scrollTo({ top: 0, behavior: moving() ? 'smooth' : 'auto' });
+    // keyboard users continue from the top of the page
+    mast.setAttribute('tabindex', '-1');
+    mast.focus({ preventScroll: true });
+    if (location.hash) history.replaceState(null, '', location.pathname + location.search);
   });
-}
+});
+mast.addEventListener('blur', () => mast.removeAttribute('tabindex'));
 
-const features = home.querySelector('.services');
-if ('IntersectionObserver' in window) {
+/* ---------- his dark-mode toggle (now a clean icon), remembered; first visit follows the system ---------- */
+const themeButton = document.querySelector('#theme');
+const themeColor = { light: '#F6F4EC', dark: '#111512' };
+function applyTheme(dark) {
+  root.dataset.theme = dark ? 'dark' : 'light';
+  themeButton.setAttribute('aria-pressed', String(dark));
+  themeButton.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+  themeButton.title = themeButton.getAttribute('aria-label');
+  document.querySelectorAll('meta[name="theme-color"]').forEach((m) => { m.content = themeColor[dark ? 'dark' : 'light']; });
+}
+applyTheme(root.dataset.theme === 'dark');
+themeButton.onclick = () => {
+  const dark = root.dataset.theme !== 'dark';
+  applyTheme(dark);
+  try { localStorage.setItem('agrilink-theme', dark ? 'dark' : 'light'); } catch {}
+};
+
+/* ---------- "How it works": his sticky feature stage on wide screens (picture changes as the steps scroll) ---------- */
+// Built after load, when the browser is idle, so it never delays the first view.
+function buildFeatureStage() {
+  const features = document.querySelector('.services');
+  if (!('IntersectionObserver' in window) || !features) return;
   const steps = [...features.querySelectorAll('article')];
   const stage = document.createElement('div');
   stage.className = 'feature-stage';
   stage.setAttribute('aria-hidden', 'true');
-  const slides = steps.map(step => {
+  const slides = steps.map((step) => {
     const slide = document.createElement('div');
     slide.className = 'feature-slide';
-    slide.append(step.querySelector('h2').cloneNode(true), step.querySelector('img').cloneNode());
+    const shot = step.querySelector('.shot').cloneNode(true);
+    shot.removeAttribute('data-speed'); // the stage itself already holds the phone still while the text moves
+    shot.querySelectorAll('img').forEach((img) => { img.alt = ''; });
+    slide.append(shot);
     stage.append(slide);
     return slide;
   });
@@ -143,72 +197,73 @@ if ('IntersectionObserver' in window) {
   function selectFeature(index) {
     features.dataset.step = String(index);
     slides.forEach((slide, position) => slide.classList.toggle('active', position === index));
+    steps.forEach((step, position) => step.classList.toggle('active', position === index));
   }
   selectFeature(0);
-  const focusLine = new IntersectionObserver(entries => {
-    for (const entry of entries) {
-      if (entry.isIntersecting) selectFeature(steps.indexOf(entry.target));
-    }
+  const focusLine = new IntersectionObserver((entries) => {
+    for (const entry of entries) if (entry.isIntersecting) selectFeature(steps.indexOf(entry.target));
   }, { rootMargin: '-48% 0px -48% 0px' });
-  steps.forEach(step => focusLine.observe(step));
+  steps.forEach((step) => focusLine.observe(step));
+  // above the first step (for example after jumping here from the menu) the stage shows step 1
+  const head = document.querySelector('.how-head');
+  if (head) new IntersectionObserver((entries) => { if (entries.some((e) => e.isIntersecting)) selectFeature(0); }, { rootMargin: '-48% 0px -48% 0px' }).observe(head);
 }
 
-const newsGrid = document.querySelector('.news-grid');
-const newsDay = () => new Date(Date.now()+3600000).toISOString().slice(0,10);
-const plain = html => new DOMParser().parseFromString(html,'text/html').body.textContent.trim();
-function showNews(stories) {
-  newsGrid.replaceChildren(...stories.map(story => {
-    const article = document.createElement('article');
-    article.innerHTML = '<a><img loading="lazy" alt=""><div class="news-copy"><small>AgroNigeria</small><h3></h3><p></p><time></time><span>Read more</span></div></a>';
-    article.querySelector('a').href = story.link;
-    const img = article.querySelector('img');
-    img.onerror = () => {img.onerror=null;img.src='./assets/field.jpg';};
-    img.src = story.photo;
-    article.querySelector('time').textContent = story.date;
-    article.querySelector('h3').textContent = story.title;
-    article.querySelector('p').textContent = story.summary;
-    return article;
-  }));
+/* ---------- "How it works" screens: only the current theme's image, fetched before it is needed ---------- */
+// Both a light and a dark image sit in each phone frame; the other theme's one is hidden and is never fetched.
+// The first screen loads at once; the rest load when the section is still well below the screen (Safari's own
+// lazy loading starts very late). A theme switch loads the newly shown ones.
+const nearSteps = new Set();
+function showScreens(scope) {
+  scope.querySelectorAll('.shot img').forEach((img) => { if (img.loading !== 'eager' && img.getClientRects().length) img.loading = 'eager'; }); // only images that are shown (theme, layout)
 }
+function loadScreens() {
+  nearSteps.forEach(showScreens);
+  const stage = document.querySelector('.feature-stage'); // wide screens: the sticky phone shows every step
+  if (stage && nearSteps.size) showScreens(stage);
+}
+const steps = [...document.querySelectorAll('.services article')];
+if (steps[0]) nearSteps.add(steps[0]); // the first screen at once
+loadScreens();
+if ('IntersectionObserver' in window) {
+  const near = new IntersectionObserver((entries) => {
+    for (const e of entries) if (e.isIntersecting) { nearSteps.add(e.target); near.unobserve(e.target); }
+    loadScreens();
+  }, { rootMargin: '900px 0px' }); // about one screen and a half ahead
+  steps.forEach((step) => near.observe(step));
+} else steps.forEach((step) => nearSteps.add(step));
+themeButton.addEventListener('click', loadScreens);
 
-function chooseNews(pool, previous) {
-  const unseen = pool.filter(story => !previous.includes(story.link));
-  const seen = pool.filter(story => previous.includes(story.link));
-  for (let i = unseen.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [unseen[i], unseen[j]] = [unseen[j], unseen[i]];
-  }
-  return [...unseen, ...seen].slice(0, 3);
-}
-async function refreshNews() {
-  let previous = [], pool = [];
-  try {
-    previous = JSON.parse(sessionStorage.getItem('agrilink-headlines')) || [];
-    pool = JSON.parse(localStorage.getItem('agrilink-story-pool')) || [];
-  } catch {}
-  if (pool.length < 3) {
-    try { pool = await (await fetch('./news-snapshot.json')).json(); } catch {}
-  }
-  const fallback = chooseNews(pool, previous);
-  if (fallback.length) showNews(fallback);
-  let edition = fallback;
-  try {
-    const response = await fetch('https://agronigeria.ng/wp-json/wp/v2/posts?_embed&per_page=15', {cache:'no-store'});
-    if (!response.ok) throw Error('Feed unavailable');
-    const posts = await response.json();
-    const stories = posts.map(p => {
-      const media = p._embedded?.['wp:featuredmedia']?.[0];
-      const words = plain(p.excerpt.rendered).split(/\s+/);
-      return {title:plain(p.title.rendered), date:p.date.slice(0,10), link:p.link,
-        photo:media?.media_details?.sizes?.medium_large?.source_url || media?.source_url || './assets/field.jpg',
-        summary:words.slice(0,25).join(' ') + (words.length>25?'…':'')};
-    });
-    if (stories.length >= 3) {
-      edition = chooseNews(stories, previous);
-      showNews(edition);
-      localStorage.setItem('agrilink-story-pool', JSON.stringify(stories));
+/* ---------- reveal sections once ---------- */
+function setUpReveals() {
+  if (!('IntersectionObserver' in window) || !moving()) { document.querySelectorAll('.reveal').forEach((el) => el.classList.add('in')); return; }
+  const reveal = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      entry.target.classList.add('in');
+      reveal.unobserve(entry.target);
     }
-  } catch {}
-  try { sessionStorage.setItem('agrilink-headlines', JSON.stringify(edition.map(story => story.link))); } catch {}
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach((el, i) => { el.style.transitionDelay = `${(i % 4) * 60}ms`; reveal.observe(el); });
 }
-refreshNews();
+
+/* ---------- demo film ---------- */
+const cinema = document.querySelector('#cinema');
+const film = cinema.querySelector('video');
+function setUpDemoFilm() {
+  if (!DEMO_VIDEO_AVAILABLE) return;
+  film.src = DEMO_FILM;
+  document.querySelectorAll('[data-demo]').forEach((el) => { el.hidden = false; });
+}
+setUpDemoFilm();
+document.querySelectorAll('[data-play]').forEach((b) => {
+  b.onclick = () => { cinema.showModal(); film.play().catch(() => {}); };
+});
+document.querySelector('#closeFilm').onclick = () => cinema.close();
+cinema.addEventListener('close', () => film.pause());
+cinema.addEventListener('click', (e) => { if (e.target === cinema) cinema.close(); });
+
+// The parts below the fold wait until the page has loaded and the browser is idle.
+const later = () => { setUpReveals(); buildFeatureStage(); loadScreens(); setUpParallax(); schedule(); };
+const whenIdle = () => ('requestIdleCallback' in window ? requestIdleCallback(later, { timeout: 1500 }) : setTimeout(later, 300));
+if (document.readyState === 'complete') whenIdle(); else addEventListener('load', whenIdle, { once: true });

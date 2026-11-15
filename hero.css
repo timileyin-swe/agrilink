@@ -1,1 +1,69 @@
-.landing{position:relative;background:#f6f4ec;padding:clamp(32px,5vw,80px) clamp(20px,5vw,88px) 42px;overflow:hidden}.word-stage{padding:clamp(15px,3vw,55px) 0 clamp(35px,5vw,85px)}.ag-word{position:relative;margin:0;width:100%;aspect-ratio:900/187;background:#345932 url('./assets/harvest.jpg') center 47%/cover;transform:rotate(-3deg);mask:url('./assets/word.svg') center/100% 100% no-repeat}.ag-word span{opacity:0}.ag-word video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 47%;opacity:0}.ag-word video.playing{opacity:1}.launch{display:flex;justify-content:space-between;align-items:end;gap:24px;border-top:1px solid #b6bdad;padding-top:28px}.launch h2{font-family:Georgia,serif;font-weight:500;line-height:.97;letter-spacing:-.045em;font-size:clamp(44px,5.8vw,92px);margin:0}.launch h2 em{color:#506d37}.launch p{max-width:450px;line-height:1.5;font-size:16px}.launch-actions{display:grid;gap:8px;min-width:210px}.launch-actions a{padding:15px 18px;border-radius:5px;text-decoration:none;background:#224b34;color:white;display:flex;justify-content:space-between;gap:28px;font-weight:700}.launch-actions a+a{background:transparent;color:#224b34;border:1px solid #74896e}.motion{position:absolute;right:5%;top:10px;background:transparent;border:0;color:#4e5b48;padding:6px;font-size:12px}@media(max-width:650px){.launch{display:block}.launch-actions{margin-top:24px}.landing{padding-top:58px}.motion{top:18px}}
+/* ---------- hero text (above his AGRILINK word) ---------- */
+.hero-copy { max-width: 980px; margin: 0 auto; padding: clamp(16px, 4vh, 56px) var(--pad) clamp(20px, 3vh, 36px); text-align: center; display: grid; justify-items: center; gap: clamp(12px, 2vh, 20px); }
+.tag { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 999px; background: var(--green-soft); color: var(--green-ink); font-weight: 600; font-size: 14px; line-height: 1.3; text-align: left; }
+.tag .ico { width: 18px; height: 18px; }
+.hero-copy h1 { font-size: clamp(36px, 6.4vw, 76px); line-height: 1.04; letter-spacing: -0.035em; max-width: 14ch; }
+.hero-lede { font-size: clamp(17px, 1.7vw, 21px); line-height: 1.5; color: var(--muted); max-width: 52ch; }
+.hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.proof { font-size: 14px; color: var(--muted); font-weight: 500; }
+@media (max-width: 480px) {
+  .hero-copy { gap: 12px; padding-top: 8px; }
+  .hero-copy h1 { font-size: 34px; }
+  .hero-lede { font-size: 16px; line-height: 1.45; }
+  .hero-actions { width: 100%; }
+  .hero-actions .btn { width: 100%; min-height: 54px; font-size: 17px; white-space: nowrap; padding-inline: 16px; }
+  .proof { font-size: 15px; }
+}
+/* Entrance: staggered fade and rise; plain fades with reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-copy > * { animation: hero-rise 560ms var(--e-out) both; }
+  .hero-copy > :nth-child(2) { animation-delay: 70ms; }
+  .hero-copy > :nth-child(3) { animation-delay: 140ms; }
+  .hero-copy > :nth-child(4) { animation-delay: 210ms; }
+  .hero-copy > :nth-child(5) { animation-delay: 280ms; }
+}
+@media (prefers-reduced-motion: reduce) { .hero-copy > * { animation: hero-fade 200ms ease-out both; } }
+@keyframes hero-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes hero-fade { from { opacity: 0; } }
+
+/* ---------- his AGRILINK word with the harvest film inside the letters (his mechanism, unchanged) ----------
+ * Static: the word is a mask over the photo. With motion: the runway pins the stage, the film plays behind a
+ * page-coloured veil with the word cut out, and pitch.js grows the veil (--zoom) until the film fills the
+ * screen, then fades it (--veil) as the story section rises over it (--intro-fade). */
+.landing { position: relative; display: grid; place-items: center; padding: 0 2vw 4vh; background: var(--surface); overflow: hidden; }
+.word-stage { width: 100%; padding: 0; }
+.ag-word { position: relative; margin: 0; width: 100%; aspect-ratio: 3.15; background: #345932 url('./assets/harvest.jpg') center 47%/cover; transform: skewY(-7deg);
+  -webkit-mask: url('./assets/word.svg') center/100% 100% no-repeat; mask: url('./assets/word.svg') center/100% 100% no-repeat; }
+.ag-word span { opacity: 0; }
+.ag-word video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 47%; opacity: 0; }
+.ag-word video.playing { opacity: 1; }
+.motion { position: absolute; right: 3%; bottom: 24px; min-height: 48px; padding: 10px 16px; border: 0; border-radius: 999px; background: var(--card); color: var(--text); font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.motion .ico { width: 16px; height: 16px; }
+@media (max-width: 700px) { .motion { right: 12px; } }
+@media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) { .landing { padding: 2vh 4vw 96px; } }
+
+/* The scroll-linked film effect runs only with a mouse or trackpad. On touch screens (phones, tablets) the page
+   scroll is drawn ahead of the script, so the story panel that the script holds in place visibly jumps
+   (seen on iPad). There the word stays still with the film inside it, like the reduced-motion version. */
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+  .hero-runway { height: 300svh; margin-bottom: -100svh; background: var(--surface); }
+  :root { --word-w: min(96vw, 2000px); --word-h: calc(var(--word-w) * 187 / 900); --word-y: calc(68px + clamp(8px, 2svh, 24px)); } /* below the sticky header (68px) when the stage is pinned */
+  .hero-runway .landing { position: sticky; top: 0; height: 100svh; padding: 0; }
+  /* On tall screens the hero text sits in the middle of the space above the word, so the first view is the text
+     and then the word, with no tall empty band under it. */
+  .hero-copy { min-height: calc(100svh - 68px - var(--word-y) - var(--word-h) - 24px); align-content: center; }
+  .hero-runway .word-stage { position: absolute; inset: 0; padding: 0; }
+  .hero-runway .ag-word { position: absolute; inset: 0; width: 100%; height: 100%; aspect-ratio: auto; -webkit-mask: none; mask: none; transform: none; background-position: center; }
+  /* The word sits in the upper part of the stage (not the middle), so it peeks out under the hero text as the
+     invitation to scroll; the veil grows from the word itself. */
+  .hero-runway .word-stage::after { content: ""; position: absolute; inset: -12% 0; background: var(--paper);
+    -webkit-mask-image: linear-gradient(white, white), url("./assets/word.svg"); mask-image: linear-gradient(white, white), url("./assets/word.svg");
+    -webkit-mask-position: center, 50% calc(var(--word-y) + 12svh); mask-position: center, 50% calc(var(--word-y) + 12svh);
+    -webkit-mask-size: 100% 100%, var(--word-w) var(--word-h); mask-size: 100% 100%, var(--word-w) var(--word-h);
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-composite: xor; mask-composite: exclude;
+    transform-origin: 50% calc(var(--word-y) + 12svh + var(--word-h) / 2); transform: skewY(-6deg) scale(var(--zoom, 1)); box-shadow: 0 0 0 100vmax var(--paper); opacity: var(--veil, 1); pointer-events: none; }
+  .hero-runway .motion { bottom: max(24px, 10svh); }
+  #intro { min-height: 100svh; align-content: center; }
+  #hero.hero-live #intro { opacity: var(--intro-fade, 0); transform: translateY(var(--intro-offset, 0px)); }
+  #hero.hero-live:not(.intro-visible) #intro { pointer-events: none; }
+}
