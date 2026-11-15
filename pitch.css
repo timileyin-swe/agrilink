@@ -2,28 +2,30 @@
  * film, and the sticky "feature stage" whose picture changes as the steps scroll by. */
 
 /* ---------- Our story (his intro panel: fades in over the zoomed film) ---------- */
-#intro { position: relative; display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(28px, 5vw, 80px); align-items: center;
+#intro { position: relative; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(28px, 5vw, 80px); align-items: center;
   padding: clamp(64px, 8vw, 120px) var(--pad); background: var(--green-soft); color: var(--text); }
-#intro h2 { font-size: clamp(38px, 5.4vw, 80px); line-height: 1; letter-spacing: -0.04em; max-width: 12ch; margin-top: 10px; }
-#intro .story { margin: 28px 0 0; max-width: 46ch; display: grid; gap: 16px; }
-#intro .story p { font-size: clamp(17px, 1.45vw, 21px); line-height: 1.55; }
-#intro .story p:first-child { font-size: clamp(20px, 1.9vw, 27px); line-height: 1.35; letter-spacing: -0.02em; font-weight: 600; }
-.intro-farmers { margin: 0; }
-.intro-farmers img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; border-radius: clamp(20px, 3vw, 44px); box-shadow: 0 24px 48px rgb(23 60 42 / 15%); }
+#intro h2 { font-size: clamp(36px, min(5.4vw, 9svh), 80px); line-height: 1; letter-spacing: -0.04em; max-width: 12ch; margin-top: 10px; }
+#intro .story { margin: clamp(22px, 3vw, 36px) 0 0; max-width: 30ch; display: grid; gap: clamp(10px, 1.4vw, 16px); }
+#intro .story .line { font-size: clamp(22px, min(2.3vw, 4.2svh), 32px); line-height: 1.28; letter-spacing: -0.02em; font-weight: 600; }
+#intro .story .support { font-size: clamp(20px, min(1.9vw, 3.5svh), 26px); font-weight: 400; letter-spacing: -0.01em; }
+#intro .story .support:first-of-type { margin-top: clamp(6px, 1vw, 12px); }
+/* Scroll-driven reveal (pitch.js sets --p from 0 to 1 per line); without the script every line is simply shown. */
+.story-live #intro .story .line { opacity: var(--p, 1); transform: translateY(calc((1 - var(--p, 1)) * var(--rise, 30px))); }
+.intro-farmers { margin: 0; overflow: hidden; border-radius: clamp(20px, 3vw, 44px); box-shadow: 0 24px 48px rgb(23 60 42 / 15%); }
+.intro-farmers picture { display: block; }
+.intro-farmers img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
+.parallax-on .intro-farmers img { transform: scale(1.08); }
 @media (max-width: 760px) { #intro { grid-template-columns: 1fr; gap: 32px; } }
 
 /* ---------- How it works ---------- */
 .how { padding: clamp(72px, 9vw, 128px) var(--pad) 0; }
 .how-head { display: grid; gap: 14px; margin-bottom: clamp(24px, 4vw, 48px); }
-.shot { margin: 0; width: min(100%, 300px); aspect-ratio: 540 / 1170; border-radius: 34px; overflow: hidden; background: var(--card); border: 8px solid #17241A;
+.shot { margin: 0; width: min(100%, 300px); aspect-ratio: 720 / 1558; border-radius: 34px; overflow: hidden; background: var(--card); border: 8px solid #17241A;
   box-shadow: 0 30px 60px rgb(23 36 26 / 20%); }
 [data-theme='dark'] .shot { border-color: #364038; box-shadow: 0 30px 60px rgb(0 0 0 / 45%); }
 .shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
-.shot-dark { display: none !important; }
-[data-theme='dark'] .shot-light { display: none !important; }
-[data-theme='dark'] .shot-dark { display: block !important; }
 .services { max-width: var(--max); margin: 0 auto; }
-.services article { display: grid; grid-template-columns: auto 1fr; gap: clamp(20px, 4vw, 48px); align-items: center; padding: 28px 0; border-top: 1px solid var(--line); }
+.services article { display: grid; grid-template-columns: minmax(0, clamp(220px, 34vw, 300px)) 1fr; gap: clamp(20px, 4vw, 48px); align-items: center; padding: 28px 0; border-top: 1px solid var(--line); }
 .services article > div { display: grid; gap: 10px; max-width: 46ch; }
 .services small { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--green-ink); letter-spacing: 0.04em; text-transform: uppercase; }
 .services h3 { font-size: clamp(26px, 3vw, 40px); letter-spacing: -0.03em; }
@@ -57,7 +59,7 @@
 /* ---------- Who it's for ---------- */
 .who { padding: clamp(72px, 9vw, 128px) var(--pad); }
 .who .wrap > div:first-child { display: grid; gap: 14px; }
-.role-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: clamp(28px, 4vw, 48px); }
+.role-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px 16px; margin-top: clamp(28px, 4vw, 48px); }
 .role { display: flex; flex-direction: column; gap: 12px; padding: 22px; border-radius: var(--r-card); background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); }
 .role h3 { font-size: 22px; }
 .role p { color: var(--muted); flex: 1; }
@@ -74,13 +76,11 @@
 .field-grid > div { display: grid; gap: 14px; position: sticky; top: 96px; }
 .crops { display: flex; gap: 14px; margin-top: 12px; }
 .crops img { width: min(46%, 220px); height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 20px; }
-.facts { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.facts { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 14px; }
 .facts li { display: flex; gap: 14px; padding: 20px; border-radius: var(--r-card); background: var(--bg); border: 1px solid var(--line); }
 .facts .ico { width: 28px; height: 28px; color: var(--green-ink); margin-top: 2px; }
 .facts h3 { font-size: 19px; margin-bottom: 6px; }
 .facts p { color: var(--muted); font-size: 16px; line-height: 1.5; }
-.facts .money { grid-column: 1 / -1; background: var(--amber-soft); border-color: var(--amber); }
-.facts .money .ico { color: var(--text); }
 @media (max-width: 860px) { .field-grid { grid-template-columns: 1fr; } .field-grid > div { position: static; } }
 @media (max-width: 560px) { .facts { grid-template-columns: 1fr; } }
 
@@ -99,6 +99,7 @@ dialog#cinema video { display: block; width: 100%; max-height: 76svh; border-rad
 
 /* ---------- Team line and the final call ---------- */
 .team { padding: 40px var(--pad); text-align: center; color: var(--muted); font-size: 16px; }
-.cta { padding: clamp(64px, 8vw, 112px) var(--pad); background: var(--green-soft); color: var(--text); text-align: center; }
+.cta { position: relative; overflow: hidden; padding: clamp(64px, 8vw, 112px) var(--pad); background: var(--green-soft); color: var(--text); text-align: center; }
+.cta .wrap { position: relative; }
 .cta .wrap { display: grid; justify-items: center; gap: 28px; }
 .cta h2 { font-size: clamp(34px, 5vw, 64px); letter-spacing: -0.03em; }

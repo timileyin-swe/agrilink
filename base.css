@@ -66,7 +66,7 @@ p { margin: 0; }
 .mast nav { display: flex; align-items: center; gap: 4px; }
 .mast nav a { display: inline-flex; align-items: center; min-height: var(--tap); padding: 0 12px; border-radius: 10px; color: var(--text); text-decoration: none; font-weight: 500; font-size: 15px; }
 @media (hover: hover) { .mast nav a:not(.btn):hover { background: var(--green-soft); } }
-.mast .btn { min-height: 44px; padding: 10px 16px; font-size: 15px; }
+.mast .btn { min-height: var(--tap); padding: 10px 16px; font-size: 15px; }
 .icon-btn { display: inline-grid; place-items: center; width: var(--tap); height: var(--tap); border-radius: 50%; border: 1px solid var(--line); background: var(--card); color: var(--text); cursor: pointer; padding: 0; flex: 0 0 auto; }
 .theme-sun { display: none; }
 [data-theme='dark'] .theme-sun { display: block; }
@@ -94,14 +94,27 @@ p { margin: 0; }
   .js .reveal.in { opacity: 1; transform: none; }
 }
 
+/* ---------- leaves that drift behind dark and green bands (decoration; parallax in pitch.js) ---------- */
+.leaf { position: absolute; z-index: 0; fill: none; stroke: currentColor; stroke-width: 0.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1.4 1.1; pointer-events: none; }
+.cta .leaf { color: var(--green-ink); opacity: 0.22; }
+.site-foot .leaf { color: #78D191; opacity: 0.16; }
+.leaf.l1 { width: clamp(120px, 18vw, 260px); top: -8%; left: -3%; transform: rotate(-20deg); }
+.leaf.l2 { width: clamp(90px, 12vw, 180px); bottom: -10%; right: 2%; transform: rotate(150deg); }
+.leaf.l3 { width: clamp(140px, 20vw, 300px); top: -12%; right: -4%; transform: rotate(30deg); }
+.leaf.l4 { width: clamp(80px, 10vw, 150px); bottom: 8%; left: 38%; transform: rotate(-120deg); }
+.leaf.l5 { width: clamp(70px, 8vw, 120px); top: 30%; left: -2%; transform: rotate(70deg); }
+@media (max-width: 560px) { .leaf.l4 { display: none; } }
+
 /* ---------- footer ---------- */
-.site-foot { background: #111512; color: #EDF2ED; padding: clamp(48px, 7vw, 88px) var(--pad) 32px; }
+.site-foot { position: relative; overflow: hidden; background: #111512; color: #EDF2ED; padding: clamp(48px, 7vw, 88px) var(--pad) 32px; }
+.site-foot .wrap { position: relative; }
 .site-foot .wrap { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px; }
 .site-foot .brand { color: #78D191; margin: 0; }
-.site-foot p { color: #A3B0A8; margin-top: 12px; max-width: 36ch; font-size: 15px; }
+.site-foot p { color: #A3B0A8; margin-top: 12px; max-width: 36ch; font-size: 16px; }
 .site-foot h2 { font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; color: #A3B0A8; margin-bottom: 8px; }
 .site-foot ul { list-style: none; margin: 0; padding: 0; display: grid; }
-.site-foot a { color: #EDF2ED; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
+.site-foot a { color: #EDF2ED; text-decoration: none; display: inline-flex; align-items: center; min-height: var(--tap); }
 .site-foot a:hover { text-decoration: underline; text-underline-offset: 4px; }
-.site-foot .foot-note { grid-column: 1 / -1; border-top: 1px solid #364038; padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; color: #A3B0A8; font-size: 14px; }
+.site-foot .foot-note { grid-column: 1 / -1; max-width: none; border-top: 1px solid #364038; padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 4px 12px; color: #A3B0A8; font-size: 16px; }
 @media (max-width: 720px) { .site-foot .wrap { grid-template-columns: 1fr 1fr; } .site-foot .wrap > :first-child { grid-column: 1 / -1; } }
+.mast[tabindex="-1"]:focus { outline: none; }

@@ -6,7 +6,8 @@
   if (slow || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const icon = (id) => `<svg class="ico" aria-hidden="true"><use href="#i-${id}"/></svg>`;
   // Start the film once the page has loaded and the browser is idle, so it never slows the first view.
-  const start = () => { video.src = './assets/harvest.mp4'; video.play().catch(() => {}); };
+  // (not while offline: the film is not kept for offline use, and the photo shows instead)
+  const start = () => { if (!navigator.onLine) return; video.src = './assets/harvest.mp4'; video.play().catch(() => {}); };
   const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(start, { timeout: 2000 }) : setTimeout(start, 600));
   if (document.readyState === 'complete') idle(); else addEventListener('load', idle, { once: true });
   video.addEventListener('playing', () => { video.classList.add('playing'); control.hidden = false; control.innerHTML = `${icon('pause')}Pause film`; });

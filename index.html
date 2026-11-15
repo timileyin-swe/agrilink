@@ -35,9 +35,9 @@
     d.classList.add('js');
   })();
 </script>
-<link rel="stylesheet" href="./base.css">
-<link rel="stylesheet" href="./hero.css">
-<link rel="stylesheet" href="./pitch.css">
+<link rel="stylesheet" href="./base.css?v=18">
+<link rel="stylesheet" href="./hero.css?v=18">
+<link rel="stylesheet" href="./pitch.css?v=18">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -96,7 +96,6 @@
       <button class="btn btn-ghost btn-big" type="button" data-demo data-play hidden><svg class="ico" aria-hidden="true"><use href="#i-play"/></svg>Watch the 2-minute demo</button>
     </div>
     <p class="proof">Works offline · 5 languages with voice support · Built for basic phones</p>
-    <span class="cue" aria-hidden="true"><svg class="ico"><use href="#i-down"/></svg></span>
   </section>
 
   <div id="hero">
@@ -105,7 +104,6 @@
         <div class="word-stage">
           <div class="ag-word" role="img" aria-label="AgriLink, written over a film of a tomato harvest"><span aria-hidden="true">AGRILINK</span><video muted playsinline loop preload="none" aria-hidden="true" poster="./assets/harvest.jpg"></video></div>
         </div>
-        <a class="scroll" href="#intro"><svg class="ico" aria-hidden="true"><use href="#i-down"/></svg><span>Scroll for the story</span></a>
         <button class="motion" type="button" hidden></button>
       </section>
     </div>
@@ -115,13 +113,15 @@
         <p class="kicker">Our story</p>
         <h2 id="story-title">From harvest to market, before it spoils.</h2>
         <div class="story">
-          <p>The tomatoes are ready. The buyer is still a phone call away. What happens to the crates that stay on the farm?</p>
-          <p>Tomatoes and peppers spoil within days. Many small farmers in Kano have no direct route to buyers, to transport or to cold storage, so they often sell cheaply to middlemen before the harvest goes bad.</p>
-          <p>AgriLink puts buyers, drivers and cold rooms in the farmer's hand, and keeps working when the signal drops.</p>
+          <p class="line" style="--rise:26px">The tomatoes are ready.</p>
+          <p class="line" style="--rise:34px">The buyer is still a phone call away.</p>
+          <p class="line" style="--rise:42px">What happens to the crates that stay on the farm?</p>
+          <p class="line support" style="--rise:30px">Tomatoes and peppers spoil within days.</p>
+          <p class="line support" style="--rise:38px">AgriLink puts buyers, drivers and cold rooms in the farmer's hand.</p>
         </div>
       </div>
       <figure class="intro-farmers">
-        <picture>
+        <picture data-speed="0.05" data-max="24">
           <source type="image/webp" srcset="./assets/happy-farmers-720.webp 720w, ./assets/happy-farmers.webp 1200w" sizes="(max-width: 700px) 92vw, 46vw">
           <img src="./assets/happy-farmers.jpg" width="1200" height="800" loading="lazy" decoding="async" alt="Three smiling farmers in a tomato field, each holding a crate full of ripe tomatoes">
         </picture>
@@ -137,23 +137,23 @@
     </div>
     <div class="services">
       <article>
-        <figure class="shot"><img class="shot-light" src="./assets/app/sell-light.webp" width="540" height="1170" loading="lazy" decoding="async" alt="AgriLink screen: How many crates, and what price? With plus and minus buttons for 40 crates at 12,000 naira each."><img class="shot-dark" src="./assets/app/sell-dark.webp" width="540" height="1170" loading="lazy" decoding="async" alt=""></figure>
+        <figure class="shot" data-speed="0.04" data-max="16"><img src="./assets/app/screen-sell.webp" width="720" height="1558" loading="lazy" decoding="async" alt="AgriLink screen, My harvests: a Sell a harvest button and listings of tomato and pepper crates, one with 1 offer waiting. The bottom tabs read Home, Sell, Deals, Care and Wallet."></figure>
         <div><small><svg class="ico" aria-hidden="true"><use href="#i-crate"/></svg>Step 1</small><h3>List your crates</h3><p>Tap Tomato or Pepper, set the number of crates and the price, and choose when buyers can collect. With no signal, it saves on the phone and sends later.</p></div>
       </article>
       <article>
-        <figure class="shot"><img class="shot-light" src="./assets/app/offers-light.webp" width="540" height="1170" loading="lazy" decoding="async" alt="AgriLink screen: Deals. Chinedu wants to buy 3 crates of tomato for 36,000 naira, with No and Yes, sell buttons."><img class="shot-dark" src="./assets/app/offers-dark.webp" width="540" height="1170" loading="lazy" decoding="async" alt=""></figure>
+        <figure class="shot" data-speed="0.04" data-max="16"><img src="./assets/app/screen-deals.webp" width="720" height="1558" loading="lazy" decoding="async" alt="AgriLink screen, Deals: Chinedu wants to buy 3 crates of tomato for 36,000 naira, 12,000 naira a crate, with No and Yes, sell buttons."></figure>
         <div><small><svg class="ico" aria-hidden="true"><use href="#i-exchange"/></svg>Step 2</small><h3>Receive offers directly from buyers</h3><p>Buyers make an offer. The farmer sees the price for each crate and what they will get, then answers Yes or No. Phone numbers stay private.</p></div>
       </article>
       <article>
-        <figure class="shot"><img class="shot-light" src="./assets/app/driver-light.webp" width="540" height="1170" loading="lazy" decoding="async" alt="AgriLink screen: Deal with Chinedu. A four-step line from Sold to Paid, a Your turn card, and Musa is your driver."><img class="shot-dark" src="./assets/app/driver-dark.webp" width="540" height="1170" loading="lazy" decoding="async" alt=""></figure>
+        <figure class="shot" data-speed="0.04" data-max="16"><img src="./assets/app/screen-driver.webp" width="720" height="1558" loading="lazy" decoding="async" alt="AgriLink screen, a buyer following a delivery: a map of the route to Bunkure, the steps Sold, Picked up, On the road and Arrived, and Musa is your driver."></figure>
         <div><small><svg class="ico" aria-hidden="true"><use href="#i-truck"/></svg>Step 3</small><h3>Find a driver</h3><p>For delivery, AgriLink finds a driver. The buyer can follow the truck on a map, and both sides confirm how many crates arrived.</p></div>
       </article>
       <article>
-        <figure class="shot"><img class="shot-light" src="./assets/app/cold-light.webp" width="540" height="1170" loading="lazy" decoding="async" alt="AgriLink screen: Care for your crops. Weather for the next days, Check my plant, Keep crates cold and Crates lost."><img class="shot-dark" src="./assets/app/cold-dark.webp" width="540" height="1170" loading="lazy" decoding="async" alt=""></figure>
+        <figure class="shot" data-speed="0.04" data-max="16"><img src="./assets/app/screen-cold.webp" width="720" height="1558" loading="lazy" decoding="async" alt="AgriLink screen, Keep crates cold: choose which crates, the number of crates and for how many days, then Book."></figure>
         <div><small><svg class="ico" aria-hidden="true"><use href="#i-snow"/></svg>Step 4</small><h3>Book cold-room space</h3><p>Crates that cannot go today can wait in a cold room, booked from the phone. In the demo, the cold rooms are examples and nothing is charged.</p></div>
       </article>
       <article>
-        <figure class="shot"><img class="shot-light" src="./assets/app/plant-light.webp" width="540" height="1170" loading="lazy" decoding="async" alt="AgriLink screen: Plant check. A photo of a tomato leaf with spots, Possibly leaf spot, and three simple steps under What to do."><img class="shot-dark" src="./assets/app/plant-dark.webp" width="540" height="1170" loading="lazy" decoding="async" alt=""></figure>
+        <figure class="shot" data-speed="0.04" data-max="16"><img src="./assets/app/screen-plant.webp" width="720" height="1558" loading="lazy" decoding="async" alt="AgriLink screen, Plant check: a photo of a tomato leaf with spots, Possibly leaf spot, and three simple steps under What to do."></figure>
         <div><small><svg class="ico" aria-hidden="true"><use href="#i-leaf"/></svg>And more</small><h3>Check a sick plant</h3><p>A photo of a leaf gives a first idea of what may be wrong and simple steps for today. It is guidance, not a diagnosis.</p></div>
       </article>
     </div>
@@ -167,25 +167,25 @@
         <p class="lede">The demo uses sample data. No sign-up is needed: one tap on the app's welcome page signs you in as any of them.</p>
       </div>
       <div class="role-grid">
-        <article class="role reveal">
+        <article class="role reveal" data-speed="-0.01" data-max="16">
           <span class="role-ico"><svg class="ico" aria-hidden="true"><use href="#i-sprout"/></svg></span>
           <h3>Farmers</h3>
           <p>List crates of tomatoes or peppers, see offers from buyers, and say yes with one tap.</p>
           <a class="btn btn-primary" href="https://agrilink-lilac-five.vercel.app" target="_blank" rel="noopener">Try it as a Farmer</a>
         </article>
-        <article class="role reveal">
+        <article class="role reveal" data-speed="-0.02" data-max="16">
           <span class="role-ico"><svg class="ico" aria-hidden="true"><use href="#i-bag"/></svg></span>
           <h3>Buyers</h3>
           <p>Find harvests near Kura and Bunkure, make an offer on one screen, and follow the delivery.</p>
           <a class="btn btn-primary" href="https://agrilink-lilac-five.vercel.app" target="_blank" rel="noopener">Try it as a Buyer</a>
         </article>
-        <article class="role reveal">
+        <article class="role reveal" data-speed="-0.03" data-max="16">
           <span class="role-ico"><svg class="ico" aria-hidden="true"><use href="#i-truck"/></svg></span>
           <h3>Drivers and Agents</h3>
           <p>Drivers see today's job and share the route. Agents act for farmers who have no phone.</p>
           <a class="btn btn-primary" href="https://agrilink-lilac-five.vercel.app" target="_blank" rel="noopener">Try it as a Driver or Agent</a>
         </article>
-        <article class="role reveal">
+        <article class="role reveal" data-speed="-0.04" data-max="16">
           <span class="role-ico"><svg class="ico" aria-hidden="true"><use href="#i-snow"/></svg></span>
           <h3>Cold-room operators</h3>
           <p>See requests for cold-room space and confirm or decline each one with a single tap.</p>
@@ -201,17 +201,17 @@
         <p class="kicker">Built for the field</p>
         <h2 id="field-title" class="section-title">Made for basic phones and weak network.</h2>
         <div class="crops">
-          <img src="./assets/tomato.webp" width="320" height="320" loading="lazy" decoding="async" alt="Ripe tomatoes">
-          <img src="./assets/pepper.webp" width="320" height="320" loading="lazy" decoding="async" alt="Red peppers">
+          <img data-speed="0.06" data-max="26" src="./assets/tomato.webp" width="320" height="320" loading="lazy" decoding="async" alt="Ripe tomatoes">
+          <img data-speed="0.1" data-max="40" src="./assets/pepper.webp" width="320" height="320" loading="lazy" decoding="async" alt="Red peppers">
         </div>
       </div>
       <ul class="facts">
-        <li class="reveal"><svg class="ico" aria-hidden="true"><use href="#i-wifi-off"/></svg><div><h3>Works offline</h3><p>Everything is saved on the phone first and sent once there is signal. Nothing is lost when the network drops.</p></div></li>
-        <li class="reveal"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg><div><h3>Basic phones, weak network</h3><p>A small app that opens fast in the browser, with big buttons and short words.</p></div></li>
-        <li class="reveal"><svg class="ico" aria-hidden="true"><use href="#i-globe"/></svg><div><h3>Hausa first</h3><p>Hausa, English, Yoruba, Igbo and Pidgin.</p></div></li>
-        <li class="reveal"><svg class="ico" aria-hidden="true"><use href="#i-sound"/></svg><div><h3>Voice on every screen</h3><p>A speaker button reads the screen aloud for people who read less.</p></div></li>
-        <li class="reveal"><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg><div><h3>Private by default</h3><p>Buyers and farmers never see each other's phone numbers.</p></div></li>
-        <li class="reveal money"><svg class="ico" aria-hidden="true"><use href="#i-money"/></svg><div><h3>Honest about money</h3><p>Money is paid between the people themselves, outside AgriLink. AgriLink never holds or moves money. It charges a small fixed fee of ₦500 per completed deal, and a cancelled deal has no fee.</p></div></li>
+        <li class="reveal" data-speed="-0.015" data-max="14"><svg class="ico" aria-hidden="true"><use href="#i-wifi-off"/></svg><div><h3>Works offline</h3><p>Everything is saved on the phone first and sent once there is signal. Nothing is lost when the network drops.</p></div></li>
+        <li class="reveal" data-speed="-0.03" data-max="14"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg><div><h3>Basic phones, weak network</h3><p>A small app that opens fast in the browser, with big buttons and short words.</p></div></li>
+        <li class="reveal" data-speed="-0.015" data-max="14"><svg class="ico" aria-hidden="true"><use href="#i-globe"/></svg><div><h3>Hausa first</h3><p>Hausa, English, Yoruba, Igbo and Pidgin.</p></div></li>
+        <li class="reveal" data-speed="-0.03" data-max="14"><svg class="ico" aria-hidden="true"><use href="#i-sound"/></svg><div><h3>Voice on every screen</h3><p>A speaker button reads the screen aloud for people who read less.</p></div></li>
+        <li class="reveal" data-speed="-0.015" data-max="14"><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg><div><h3>Private by default</h3><p>Buyers and farmers never see each other's phone numbers.</p></div></li>
+        <li class="reveal" data-speed="-0.03" data-max="14"><svg class="ico" aria-hidden="true"><use href="#i-leaf"/></svg><div><h3>Weather and plant care</h3><p>The weather for the next days, and a photo check when a leaf looks sick.</p></div></li>
       </ul>
     </div>
   </section>
@@ -230,11 +230,12 @@
   <section class="team" aria-labelledby="team-title">
     <div class="wrap reveal">
       <h2 id="team-title" class="visually-hidden">Who built AgriLink</h2>
-      <p>Built by TechRoom360 and a Kano-focused team for the USPF Changemaker Challenge 2026.</p>
+      <p>Built by Team ARGUS for the USPF Changemaker Challenge 2026.</p>
     </div>
   </section>
 
   <section class="cta" aria-labelledby="cta-title">
+    <svg class="leaf l1" data-speed="0.18" data-max="80" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 19c0-8 5-13.5 14.5-14.5C18.5 14 13 19 5 19zm0 0 7.5-7.5"/></svg><svg class="leaf l2" data-speed="-0.12" data-max="40" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 19c0-8 5-13.5 14.5-14.5C18.5 14 13 19 5 19zm0 0 7.5-7.5"/></svg>
     <div class="wrap reveal">
       <h2 id="cta-title">Try AgriLink now, no sign-up</h2>
       <a class="btn btn-primary btn-big" href="https://agrilink-lilac-five.vercel.app" target="_blank" rel="noopener">Try the live app<svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
@@ -243,6 +244,7 @@
 </main>
 
 <footer class="site-foot">
+  <svg class="leaf l3" data-speed="0.2" data-max="80" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 19c0-8 5-13.5 14.5-14.5C18.5 14 13 19 5 19zm0 0 7.5-7.5"/></svg><svg class="leaf l4" data-speed="0.12" data-max="40" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 19c0-8 5-13.5 14.5-14.5C18.5 14 13 19 5 19zm0 0 7.5-7.5"/></svg><svg class="leaf l5" data-speed="-0.1" data-max="30" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 19c0-8 5-13.5 14.5-14.5C18.5 14 13 19 5 19zm0 0 7.5-7.5"/></svg>
   <div class="wrap">
     <div>
       <a class="brand" href="#top"><span class="mark" aria-hidden="true">A</span><span>AgriLink</span></a>
@@ -256,12 +258,12 @@
       <h2>AgriLink</h2>
       <ul><li><a href="https://agrilink-lilac-five.vercel.app" target="_blank" rel="noopener">Try the live app</a></li><li><span class="foot-place">Kano State, Nigeria</span></li></ul>
     </div>
-    <p class="foot-note"><span>USPF Changemaker Challenge 2026</span><a href="#top">Back to top</a></p>
+    <p class="foot-note"><span>Team ARGUS · USPF Changemaker Challenge 2026</span><a class="to-top" href="#top">Back to top</a></p>
   </div>
 </footer>
 
-<script src="./hero.js"></script>
-<script src="./pitch.js"></script>
-<script src="./app.js"></script>
+<script src="./hero.js?v=18"></script>
+<script src="./pitch.js?v=18"></script>
+<script src="./app.js?v=18"></script>
 </body>
 </html>

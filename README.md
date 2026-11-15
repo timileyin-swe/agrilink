@@ -17,14 +17,21 @@ Open http://localhost:8000. The site uses plain HTML, CSS and JavaScript and nee
 
 ## The demo film
 
-The "Watch the 2-minute demo" button and the Demo section appear by themselves when this file exists:
+The "Watch the 2-minute demo" button, the Demo menu item and the Demo section are hidden until the film is added. To switch them on:
 
-```
-assets/agrilink-demo.mp4
-```
+1. Add the film as `assets/agrilink-demo.mp4` (MP4, H.264 video, AAC audio, 1280×720 or 1920×1080, under 25 MB).
+2. In `pitch.js`, change `const DEMO_VIDEO_AVAILABLE = false;` to `true`.
+3. Raise the version by one so returning visitors get the change: in `sw.js`, `agrilink-site-v18` and `?v=18` become `v19`; in `index.html`, the six `?v=18` on the style and script links become `?v=19`.
+4. Commit and push.
 
-Use MP4 (H.264 video, AAC audio), 1280×720 or 1920×1080, under 25 MB. Until the file is there, the button, the menu item and the section stay hidden.
+While the switch is `false`, the page never asks for the file, so there is no error in the console.
+
+## Screenshots
+
+`assets/app/screen-*.webp` are real screens from the live app (light mode, 390×844 at 2×, saved 720 px wide): the demo farmer's harvests, deals, cold room booking and plant check, and a buyer following a delivery.
 
 ## How the AGRILINK word works
 
-`hero.css` and `pitch.js`: the harvest film (`assets/harvest.mp4`) plays behind a page-coloured layer with the word cut out (`assets/word.svg` as a CSS mask). While you scroll the pinned stage, the layer grows (`--zoom`) until the film fills the screen, then the story panel fades in over it (`--intro-fade`). With reduced motion, save-data or 2G, the word stays still and shows the photo.
+`hero.css` and `pitch.js`: the harvest film (`assets/harvest.mp4`) plays behind a page-coloured layer with the word cut out (`assets/word.svg` as a CSS mask). While you scroll the pinned stage, the layer grows (`--zoom`) until the film fills the screen, then the story panel fades in over it (`--intro-fade`). With reduced motion, save-data or 2G, the word stays still and shows the photo. On phones the word keeps its letter shape: its width follows the screen and its height follows the width.
+
+The story lines under "Our story" appear one by one as you scroll, and a few pictures, cards and leaves move at slightly different speeds (parallax). All of this runs in one animation frame in `pitch.js`, uses only transform and opacity, and is switched off with reduced motion.

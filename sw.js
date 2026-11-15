@@ -1,10 +1,12 @@
 // Network first, the cached copy when offline. A new cache name for each release: the old one is deleted on
-// activate, so returning visitors get the new site (the mini-app pages and the news are gone).
-const cacheName = 'agrilink-site-v17';
-const core = ['./', './index.html', './base.css', './hero.css', './pitch.css', './hero.js', './pitch.js', './app.js',
+// activate, so returning visitors get the new site (v18: new screenshots, the story reveal and parallax).
+const cacheName = 'agrilink-site-v18';
+// The ?v= on styles and scripts matches index.html, so a new page never runs an old script from a browser cache.
+const v = '?v=18';
+const core = ['./', './index.html', './base.css' + v, './hero.css' + v, './pitch.css' + v, './hero.js' + v, './pitch.js' + v, './app.js' + v,
   './assets/word.svg', './assets/harvest.jpg', './assets/favicon.svg', './assets/fonts/inter-latin.woff2', './assets/fonts/inter-latin-ext.woff2',
   './assets/happy-farmers-720.webp']; // screenshots and photos are kept as they are viewed (below);
-self.addEventListener('install', (event) => event.waitUntil(caches.open(cacheName).then((cache) => cache.addAll(core)).then(() => self.skipWaiting())));
+self.addEventListener('install', (event) => event.waitUntil(caches.open(cacheName).then((cache) => cache.addAll(core.map((url) => new Request(url, { cache: 'reload' })))).then(() => self.skipWaiting())));
 self.addEventListener('activate', (event) => event.waitUntil(
   caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== cacheName).map((k) => caches.delete(k)))).then(() => self.clients.claim())));
 self.addEventListener('fetch', (event) => {
