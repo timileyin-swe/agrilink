@@ -13,7 +13,9 @@ const landing = home.querySelector('.landing');
 const runway = home.querySelector('.hero-runway');
 const storyLines = [...document.querySelectorAll('#intro .story .line')];
 const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
-const moving = () => !motionPreference.matches;
+// Touch screens get the still version too (see hero.css): scroll-linked motion jumps there.
+const touchScreen = matchMedia('(hover: none), (pointer: coarse)');
+const moving = () => !motionPreference.matches && !touchScreen.matches;
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
 
 // Classes that switch the motion on. Without this script (or with reduced motion) nothing waits to appear.
@@ -70,7 +72,7 @@ function readStory() {
 const layers = [];
 const active = new Set();
 function setUpParallax() {
-  if (!('IntersectionObserver' in window)) return;
+  if (!('IntersectionObserver' in window) || !moving()) return; // none on touch screens or with reduced motion
   document.querySelectorAll('[data-speed]').forEach((el) => {
     if (el.closest('.feature-stage')) return;
     layers.push({ el, speed: Number(el.dataset.speed) || 0, max: Number(el.dataset.max) || 24, y: 0 });
@@ -207,6 +209,31 @@ function buildFeatureStage() {
   if (head) new IntersectionObserver((entries) => { if (entries.some((e) => e.isIntersecting)) selectFeature(0); }, { rootMargin: '-48% 0px -48% 0px' }).observe(head);
 }
 
+/* ---------- "How it works" screens: only the current theme's image, fetched before it is needed ---------- */
+// Both a light and a dark image sit in each phone frame; the other theme's one is hidden and is never fetched.
+// The first screen loads at once; the rest load when the section is still well below the screen (Safari's own
+// lazy loading starts very late). A theme switch loads the newly shown ones.
+const nearSteps = new Set();
+function showScreens(scope) {
+  scope.querySelectorAll('.shot img').forEach((img) => { if (img.loading !== 'eager' && img.getClientRects().length) img.loading = 'eager'; }); // only images that are shown (theme, layout)
+}
+function loadScreens() {
+  nearSteps.forEach(showScreens);
+  const stage = document.querySelector('.feature-stage'); // wide screens: the sticky phone shows every step
+  if (stage && nearSteps.size) showScreens(stage);
+}
+const steps = [...document.querySelectorAll('.services article')];
+if (steps[0]) nearSteps.add(steps[0]); // the first screen at once
+loadScreens();
+if ('IntersectionObserver' in window) {
+  const near = new IntersectionObserver((entries) => {
+    for (const e of entries) if (e.isIntersecting) { nearSteps.add(e.target); near.unobserve(e.target); }
+    loadScreens();
+  }, { rootMargin: '900px 0px' }); // about one screen and a half ahead
+  steps.forEach((step) => near.observe(step));
+} else steps.forEach((step) => nearSteps.add(step));
+themeButton.addEventListener('click', loadScreens);
+
 /* ---------- reveal sections once ---------- */
 function setUpReveals() {
   if (!('IntersectionObserver' in window) || !moving()) { document.querySelectorAll('.reveal').forEach((el) => el.classList.add('in')); return; }
@@ -237,6 +264,6 @@ cinema.addEventListener('close', () => film.pause());
 cinema.addEventListener('click', (e) => { if (e.target === cinema) cinema.close(); });
 
 // The parts below the fold wait until the page has loaded and the browser is idle.
-const later = () => { setUpReveals(); buildFeatureStage(); setUpParallax(); schedule(); };
+const later = () => { setUpReveals(); buildFeatureStage(); loadScreens(); setUpParallax(); schedule(); };
 const whenIdle = () => ('requestIdleCallback' in window ? requestIdleCallback(later, { timeout: 1500 }) : setTimeout(later, 300));
 if (document.readyState === 'complete') whenIdle(); else addEventListener('load', whenIdle, { once: true });

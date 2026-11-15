@@ -21,7 +21,7 @@ The "Watch the 2-minute demo" button, the Demo menu item and the Demo section ar
 
 1. Add the film as `assets/agrilink-demo.mp4` (MP4, H.264 video, AAC audio, 1280×720 or 1920×1080, under 25 MB).
 2. In `pitch.js`, change `const DEMO_VIDEO_AVAILABLE = false;` to `true`.
-3. Raise the version by one so returning visitors get the change: in `sw.js`, `agrilink-site-v19` and `?v=19` become `v20`; in `index.html`, the six `?v=19` on the style and script links become `?v=20`.
+3. Raise the version by one so returning visitors get the change: in `sw.js`, `agrilink-site-v20` and `?v=20` become `v21`; in `index.html`, the six `?v=20` on the style and script links become `?v=21`.
 4. Commit and push.
 
 While the switch is `false`, the page never asks for the file, so there is no error in the console.

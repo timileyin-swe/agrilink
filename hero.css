@@ -40,9 +40,12 @@
 .motion { position: absolute; right: 3%; bottom: 24px; min-height: 48px; padding: 10px 16px; border: 0; border-radius: 999px; background: var(--card); color: var(--text); font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
 .motion .ico { width: 16px; height: 16px; }
 @media (max-width: 700px) { .motion { right: 12px; } }
-@media (prefers-reduced-motion: reduce) { .landing { padding: 2vh 4vw 96px; } }
+@media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) { .landing { padding: 2vh 4vw 96px; } }
 
-@media (prefers-reduced-motion: no-preference) {
+/* The scroll-linked film effect runs only with a mouse or trackpad. On touch screens (phones, tablets) the page
+   scroll is drawn ahead of the script, so the story panel that the script holds in place visibly jumps
+   (seen on iPad). There the word stays still with the film inside it, like the reduced-motion version. */
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
   .hero-runway { height: 300svh; margin-bottom: -100svh; background: var(--surface); }
   :root { --word-w: min(96vw, 2000px); --word-h: calc(var(--word-w) * 187 / 900); --word-y: calc(68px + clamp(8px, 2svh, 24px)); } /* below the sticky header (68px) when the stage is pinned */
   .hero-runway .landing { position: sticky; top: 0; height: 100svh; padding: 0; }
